@@ -19,7 +19,7 @@ create table if not exists manageUsers
     userRole   varchar(50) not null,
     department varchar(50) null,
     CONSTRAINT pk_manage_users PRIMARY KEY (name, userName),
-    CONSTRAINT uk_manage_users UNIQUE (contactNo, email, userName)
+    CONSTRAINT uk_manage_users UNIQUE (email, userName)
 
 );
 
@@ -86,12 +86,12 @@ CREATE TABLE covid_positive
 CREATE TABLE patient
 (
     id       INT          NOT NULL,
-    hospital varchar(15)          NOT NULL,
+    hospital varchar(15)  NOT NULL,
     date     DATETIME     NOT NULL,
     reason   VARCHAR(500) NOT NULL,
     CONSTRAINT PRIMARY KEY (date, id, hospital),
     CONSTRAINT FOREIGN KEY (id) REFERENCES people (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT FOREIGN KEY (hospital) REFERENCES covid19.managehospitals(id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT FOREIGN KEY (hospital) REFERENCES manageHospitals(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE suspected
@@ -99,7 +99,7 @@ CREATE TABLE suspected
     id     INT          NOT NULL PRIMARY KEY,
     reason VARCHAR(500) NOT NULL,
     date   DATETIME     NOT NULL,
-    CONSTRAINT FOREIGN KEY (id) REFERENCES people (id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT FOREIGN KEY (id) REFERENCES people(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE quarantined
@@ -109,7 +109,7 @@ CREATE TABLE quarantined
     entered_date DATETIME     NOT NULL,
     center       varchar(15)          NOT NULL,
     CONSTRAINT FOREIGN KEY (id) REFERENCES people (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT FOREIGN KEY (center) REFERENCES managequarantinecenters (id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT FOREIGN KEY (center) REFERENCES manageQuarantineCenters(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE reference
@@ -118,7 +118,7 @@ CREATE TABLE reference
     reference_id INT          NOT NULL,
     connection   VARCHAR(500) NOT NULL,
     PRIMARY KEY (suspected_id, reference_id),
-    CONSTRAINT FOREIGN KEY (suspected_id) REFERENCES people (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT FOREIGN KEY (suspected_id) REFERENCES people(id) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT FOREIGN KEY (reference_id) REFERENCES people(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -139,7 +139,6 @@ CREATE TABLE exit_data
     date        DATETIME                                NOT NULL,
     CONSTRAINT PRIMARY KEY (id, `from`, location),
     CONSTRAINT FOREIGN KEY (id) REFERENCES people (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT FOREIGN KEY (`from`) REFERENCES managehospitals (id) ON UPDATE CASCADE ON DELETE CASCADE,
-    CONSTRAINT FOREIGN KEY (`from`) REFERENCES managequarantinecenters (id) ON UPDATE CASCADE ON DELETE CASCADE
+    CONSTRAINT FOREIGN KEY (`from`) REFERENCES manageHospitals(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT FOREIGN KEY (`from`) REFERENCES manageQuarantineCenters(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
